@@ -130,7 +130,6 @@ Unlike my previous Metro-based solution ([`stylex-expo`](https://github.com/java
 ### Limitations & Future Improvements
 
 - **Proof of Concept**: This repository currently serves as a PoC and lacks thorough testing. The plugin isn't published on npm yet.
-- **Watcher Mode**: Currently, all files are rebuilt in watch mode. This could be optimized with a more efficient file watcher.
 - **Tree Shaking**: Since the PostCSS plugin processes all files matching the
   glob patterns, unused code may affect CSS output. This issue is similar to
   CLI-based tools like Tailwind CLI/StyleX CLI and should be addressed with

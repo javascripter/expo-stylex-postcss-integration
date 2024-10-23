@@ -1,5 +1,5 @@
+import babel from '@babel/core'
 import type { AtRule, Message, Root } from 'postcss'
-import reactStrictBabelPreset from 'react-strict-dom/babel-preset'
 
 import * as path from 'node:path'
 import * as fs from 'node:fs'
@@ -71,6 +71,7 @@ export function createBuilder() {
     include: string[]
     exclude: string[]
     cwd: string
+    babelConfig: babel.TransformOptions
   } | null = null
 
   const bundler = createBundler()
@@ -83,6 +84,7 @@ export function createBuilder() {
     include: string[]
     exclude: string[]
     cwd: string
+    babelConfig: babel.TransformOptions
   }) {
     config = options
   }
@@ -119,19 +121,14 @@ export function createBuilder() {
    * @returns The bundled CSS as a string.
    */
   async function build() {
-    const { cwd, include, exclude } = getConfig()
+    const { cwd, include, exclude, babelConfig } = getConfig()
 
-    // TODO: Avoid recompiling all files sin watch mode
+    // TODO: Avoid recompiling all files in watch mode
     const files = globSync(include, {
       onlyFiles: true,
       ignore: exclude,
       cwd,
     })
-
-    // TODO: Add custom Babel configuration support
-    const babelConfig = {
-      presets: [[reactStrictBabelPreset, { rootDir: cwd }]],
-    }
 
     await Promise.all(
       files.map((file) => {

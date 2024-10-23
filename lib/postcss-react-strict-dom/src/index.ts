@@ -1,3 +1,4 @@
+import babel from '@babel/core'
 import type { PluginCreator } from 'postcss'
 import postcss from 'postcss'
 import { createBuilder } from './builder'
@@ -6,6 +7,7 @@ interface PluginOptions {
   include: string[]
   exclude?: string[]
   cwd?: string
+  babelConfig?: babel.TransformOptions
 }
 
 const PLUGIN_NAME = 'postcss-react-strict-dom'
@@ -14,7 +16,8 @@ const builder = createBuilder()
 
 /**
  * PostCSS plugin for processing StyleX and React Strict DOM rules.
- * @param options - Configuration options for the plugin, including file patterns to include/exclude and the working directory.
+ * @param options - Configuration options for the plugin, including file
+ * patterns to include/exclude and the working directory, as well as Babel options.
  * @returns A PostCSS plugin object with async processing for StyleX at-rules.
  */
 const plugin: PluginCreator<PluginOptions> = (options) => {
@@ -26,6 +29,9 @@ const plugin: PluginCreator<PluginOptions> = (options) => {
       '**/*.d.ts',
     ],
     cwd = process.cwd(),
+    // By default reuses the Babel configuration from the project root.
+    // Use `babelrc: false` to disable this behavior.
+    babelConfig = {},
   } = options
 
   return {
@@ -44,6 +50,7 @@ const plugin: PluginCreator<PluginOptions> = (options) => {
           include,
           exclude,
           cwd,
+          babelConfig,
         })
 
         // Find the "@stylex" at-rule

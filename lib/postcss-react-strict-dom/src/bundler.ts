@@ -1,4 +1,4 @@
-import babel = require('@babel/core')
+import babel from '@babel/core'
 import reactStrictBabelPreset from 'react-strict-dom/babel-preset'
 
 type StyleXRule = string
@@ -23,8 +23,13 @@ export function createBundler() {
     babelConfig: babel.TransformOptions
   ) {
     const { code, map, metadata } = await babel.transformAsync(sourceCode, {
-      babelrc: false,
       filename: id,
+      caller: {
+        name: 'postcss-react-strict-dom',
+        platform: 'web',
+        isDev: process.env.NODE_ENV === 'development',
+        supportsStaticESM: true,
+      },
       ...babelConfig,
     })
     const stylex = (metadata as { stylex?: StyleXRule[] }).stylex

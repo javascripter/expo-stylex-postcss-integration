@@ -11,6 +11,15 @@ export function createBundler() {
   const styleXRulesMap = new Map<string, StyleXRule[]>()
 
   /**
+   * Determines if the source code should be transformed based on the presence of StyleX imports.
+   */
+  function shouldTransform(sourceCode: string) {
+    return (
+      sourceCode.includes('stylex') || sourceCode.includes('react-strict-dom')
+    )
+  }
+
+  /**
    * Transforms the source code using Babel, extracting StyleX rules and storing them.
    * @param id - The unique identifier for the file (usually the file path).
    * @param sourceCode - The source code to transform.
@@ -61,6 +70,7 @@ export function createBundler() {
   }
 
   return {
+    shouldTransform,
     transform,
     remove,
     bundle,

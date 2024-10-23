@@ -133,6 +133,9 @@ export function createBuilder() {
     await Promise.all(
       files.map((file) => {
         const contents = fs.readFileSync(path.resolve(cwd, file), 'utf-8')
+        if (!bundler.shouldTransform(contents)) {
+          return
+        }
         return bundler.transform(file, contents, babelConfig)
       })
     )

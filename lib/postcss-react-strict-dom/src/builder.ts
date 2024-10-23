@@ -76,6 +76,8 @@ export function createBuilder() {
 
   const bundler = createBundler()
 
+  const fileModifiedMap = new Map<string, number>()
+
   /**
    * Configures the builder with the provided options.
    * @param options - The options to configure the builder.
@@ -117,22 +119,52 @@ export function createBuilder() {
   }
 
   /**
-   * Transforms the included files, bundles the CSS, and returns the result.
-   * @returns The bundled CSS as a string.
+   * Retrieves all files that match the include and exclude patterns.
+   * @returns An array of file paths.
    */
-  async function build() {
-    const { cwd, include, exclude, babelConfig } = getConfig()
-
-    // TODO: Avoid recompiling all files in watch mode
-    const files = globSync(include, {
+  function getFiles() {
+    const { cwd, include, exclude } = getConfig()
+    return globSync(include, {
       onlyFiles: true,
       ignore: exclude,
       cwd,
     })
+  }
+
+  /**
+   * Transforms the included files, bundles the CSS, and returns the result.
+   * @returns The bundled CSS as a string.
+   */
+  async function build() {
+    const { cwd, babelConfig } = getConfig()
+
+    const files = getFiles()
+
+    const filesToTransform = []
+
+    for (const file of files) {
+      const filePath = path.resolve(cwd, file)
+      const mtimeMs = fs.existsSync(filePath)
+        ? fs.statSync(filePath).mtimeMs
+        : -Infinity
+
+      // Skip files that have not been modified since the last build
+      // On first run, all files will be transformed
+      const shouldSkip =
+        fileModifiedMap.has(file) && mtimeMs === fileModifiedMap.get(file)
+
+      if (shouldSkip) {
+        continue
+      }
+
+      fileModifiedMap.set(file, mtimeMs)
+      filesToTransform.push(file)
+    }
 
     await Promise.all(
-      files.map((file) => {
-        const contents = fs.readFileSync(path.resolve(cwd, file), 'utf-8')
+      filesToTransform.map((file) => {
+        const filePath = path.resolve(cwd, file)
+        const contents = fs.readFileSync(filePath, 'utf-8')
         if (!bundler.shouldTransform(contents)) {
           return
         }

@@ -123,10 +123,6 @@ This repository uses:
 
 This approach simplifies integration across bundlers like **Metro** and **Turbopack**, allowing easy configuration without complex bundler-specific integration.
 
-### Integration with Next.js
-
-Since **Next.js** natively supports **PostCSS**, this plugin can theoretically work with both **Webpack** and **Turbopack** to integrate StyleX with React Strict DOM. Although not fully tested, experimentation and feedback are encouraged.
-
 ### Why PostCSS?
 
 Unlike my previous Metro-based solution ([`stylex-expo`](https://github.com/javascripter/stylex-expo)), this PostCSS-based approach avoids Metro’s side-effect issues, particularly cache invalidation problems as discussed [here](https://github.com/facebook/react-strict-dom/issues/34#issuecomment-2101256176).
@@ -135,7 +131,6 @@ Unlike my previous Metro-based solution ([`stylex-expo`](https://github.com/java
 
 - **Proof of Concept**: This repository currently serves as a PoC and lacks thorough testing. The plugin isn't published on npm yet.
 - **Watcher Mode**: Currently, all files are rebuilt in watch mode. This could be optimized with a more efficient file watcher.
-- **Custom Babel Config**: The plugin currently uses a hardcoded Babel configuration. Future versions should allow user-provided Babel configurations.
 - **Tree Shaking**: Since the PostCSS plugin processes all files matching the
   glob patterns, unused code may affect CSS output. This issue is similar to
   CLI-based tools like Tailwind CLI/StyleX CLI and should be addressed with

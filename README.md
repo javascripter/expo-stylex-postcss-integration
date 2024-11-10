@@ -1,6 +1,8 @@
 # Expo Web with Static CSS Extraction using PostCSS (Proof of Concept)
 
-This repository demonstrates how to integrate **StyleX** and **React Strict DOM** with **Expo Web**, enabling **Static CSS Extraction** through a custom **PostCSS** plugin located in `lib/postcss-react-strict-dom`.
+This repository demonstrates how to integrate **StyleX** and **React Strict
+DOM** with **Expo Web**, enabling **Static CSS Extraction** through a custom
+**PostCSS** plugin using [postcss-react-strict-dom](https://github.com/javascripter/postcss-react-strict-dom).
 
 ### Highlights
 
@@ -13,7 +15,15 @@ This repository demonstrates how to integrate **StyleX** and **React Strict DOM*
 
 To integrate with Expo Web:
 
-1. Update `babel.config.js`:
+1. Install postcss-react-strict-dom
+
+Install the plugin:
+
+```bash
+bun add postcss-react-strict-dom --dev
+```
+
+2. Update `babel.config.js`:
 
 ```js
 // Based on:
@@ -60,7 +70,7 @@ module.exports = function (api) {
 }
 ```
 
-2. Update `postcss.config.js`:
+3. Update `postcss.config.js`:
 
 ```js
 module.exports = {
@@ -76,13 +86,13 @@ module.exports = {
 }
 ```
 
-3. Create `src/global.css`:
+4. Create `src/global.css`:
 
 ```css
 @stylex;
 ```
 
-4. Import `src/global.css` in your root layout (`src/app/layout.tsx`):
+5. Import `src/global.css` in your root layout (`src/app/layout.tsx`):
 
 ```typescript
 import '@/global.css'
@@ -129,7 +139,6 @@ Unlike my previous Metro-based solution ([`stylex-expo`](https://github.com/java
 
 ### Limitations & Future Improvements
 
-- **Proof of Concept**: This repository currently serves as a PoC and lacks thorough testing. The plugin isn't published on npm yet.
 - **Tree Shaking**: Since the PostCSS plugin processes all files matching the
   glob patterns, unused code may affect CSS output. This issue is similar to
   CLI-based tools like Tailwind CLI/StyleX CLI and should be addressed with

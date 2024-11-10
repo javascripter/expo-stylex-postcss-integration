@@ -34,7 +34,7 @@
     "@stylexjs/babel-plugin": "^0.8.0",
     "@types/react": "~18.2.45",
     "autoprefixer": "^10.4.20",
-    "postcss-react-strict-dom": "file:./lib/postcss-react-strict-dom",
+    "postcss-react-strict-dom": "^0.0.0",
     "typescript": "~5.3.3"
   },
   "private": true
